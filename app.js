@@ -908,6 +908,7 @@ $('#manualForm').addEventListener('submit', (e) => {
 /* ---------------- reception: job ---------------- */
 let job = null;
 function openJob(plate, cc, fromCam) {
+  if (cc === 'S') plate = spaced(plate);
   const hit = cc === 'S' ? Store.find(normPlate(plate)) : null;
   job = { plate, cc, hit, sel: [true, false, false, false], pos: 0, leaves: false, phone: '' };
   const hp = hit ? hit.phone.replace(/[^\d+]/g, '') : '';

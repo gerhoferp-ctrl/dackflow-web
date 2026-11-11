@@ -43,6 +43,7 @@ input { font: inherit; }
   padding: 14px 16px 24px;
   display: flex; flex-direction: column; gap: 10px;
 }
+.body > * { flex-shrink: 0; }
 .foot {
   padding: 8px 16px calc(14px + var(--sab));
   background: var(--ground);
@@ -145,6 +146,7 @@ input { font: inherit; }
 }
 .input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(27,63,137,.25); }
 .plate-input { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #111; border-color: #111; }
+.plate-input::placeholder { text-transform: none; font-family: Barlow, system-ui, sans-serif; font-weight: 500; letter-spacing: 0; color: #8C97B0; }
 .plate-input.big { height: 60px; font-size: 26px; }
 .input.cc { width: 84px; text-transform: uppercase; font-weight: 700; }
 .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -273,6 +275,7 @@ input { font: inherit; }
 .stepper button { width: 48px; height: 48px; border-radius: 12px; background: var(--navy); color: #fff; font-size: 24px; font-weight: 700; }
 .stepper button:disabled { background: #C9D3E6; }
 .stepper output { min-width: 34px; text-align: center; font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 28px; }
+.card.svc { flex-direction: row; }
 .svc { display: flex; align-items: center; gap: 12px; }
 .svc .grow { flex: 1; }
 .svc .t { font-size: 18px; font-weight: 700; display: block; }

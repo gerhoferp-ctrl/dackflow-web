@@ -6,7 +6,7 @@ const out = path.join(__dirname, '..', 'shots');
 fs.mkdirSync(out, { recursive: true });
 const log = [];
 (async () => {
-  const browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--use-file-for-fake-video-capture=' + path.join(__dirname, 'plate.mjpeg')] });
+  const browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--use-file-for-fake-video-capture=' + path.join(__dirname, 'plate.y4m')] });
   const ctx = await browser.newContext({ ...devices['iPhone 13'], permissions: ['camera'] });
   const page = await ctx.newPage();
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') log.push(m.type() + ': ' + m.text()); });
@@ -58,6 +58,10 @@ const log = [];
       await page.fill('#liftQuery', 'ABC123'); await page.click('#liftSearch button');
       await page.waitForSelector('#result:not([hidden])');
     }
+    await page.waitForTimeout(500);
+    await shot('05-result');
+    await page.evaluate(() => document.querySelector('#resBody').scrollTo(0, 2000));
+    await shot('05b-result-scrolled');
   });
   await step('customer', async () => {
     await page.click('.cust-row'); await page.waitForSelector('#customer:not([hidden])'); await shot('06-customer');
