@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DäckFlow</title>
+<meta name="theme-color" content="#00133D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DäckFlow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="screen dark" hidden>
+  <div class="home-top">
+    <img src="icons/icon.svg" alt="" class="home-logo">
+    <div class="home-brand">
+      <div class="wordmark">DÄCK<span>FLOW</span></div>
+      <div class="band">VERKSTAD → KASSA</div>
+    </div>
+    <button class="round ghost" data-go="settings" aria-label="Inställningar">
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54a7 7 0 0 0-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54a7 7 0 0 0 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg>
+    </button>
+  </div>
+  <p id="greeting" class="greeting" hidden></p>
+  <button class="home-btn lift" data-go="lift">
+    <svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 42h36M12 42V20M36 42V20M8 20h32"/><circle cx="24" cy="11" r="6"/></g></svg>
+    <span class="home-btn-title">LYFT</span>
+    <span class="home-btn-sub">Skanna regnummer · däckhotellet</span>
+  </button>
+  <button class="home-btn reception" data-go="queue">
+    <svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="34" height="34" rx="5"/><path d="M15 18h18M15 26h18M15 34h10"/></g></svg>
+    <span class="home-btn-title small">KUNDMOTTAGARE</span>
+    <span class="home-btn-sub">Mottagning och kö till verkstaden</span>
+  </button>
+  <p class="version" id="version"></p>
+</section>
+
+<!-- ============ SETTINGS ============ -->
+<section id="settings" class="screen" hidden>
+  <header class="head"><button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h1>INSTÄLLNINGAR</h1></header>
+  <div class="body">
+    <label class="label" for="setName">Ditt namn</label>
+    <input id="setName" class="input" autocomplete="given-name" placeholder="t.ex. Peter" autocapitalize="words">
+    <p class="hint">Visas på startsidan och sparas på ordrar och bilar du lägger i kön.</p>
+    <p class="label" style="margin-top:22px">Öppna när appen startar</p>
+    <div id="startChoices" class="choices" role="radiogroup"></div>
+  </div>
+  <div class="foot"><button class="btn yellow" id="saveSettings">Spara</button></div>
+</section>
+
+<!-- ============ LYFT: SCAN ============ -->
+<section id="lift" class="screen dark" hidden>
+  <header class="head flat">
+    <button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="head-col"><span class="kicker">Lyft</span><h1>DÄCKHOTELL</h1></div>
+    <button class="round" data-go="orders" aria-label="Ordrar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+  </header>
+  <button class="status" id="dataStatus"><span class="dot"></span><span class="status-text"></span></button>
+  <div class="season" id="season" hidden>
+    <div class="season-row"><b id="seasonTitle"></b><b id="seasonPct"></b></div>
+    <div class="bar"><i id="seasonFill"></i></div>
+    <div class="season-row small"><span id="seasonDone"></span><span id="seasonLeft"></span></div>
+  </div>
+  <div class="cam" id="liftCam">
+    <video playsinline muted autoplay></video>
+    <div class="frame"></div>
+    <div class="cam-msg">Rikta kameran mot skylten</div>
+    <div class="live" hidden></div>
+    <button class="cam-start" hidden>Starta kameran</button>
+  </div>
+  <div class="sheet">
+    <form id="liftSearch" class="search" autocomplete="off">
+      <input id="liftQuery" class="input plate-input" placeholder="Regnr, namn eller telefon" autocapitalize="characters" spellcheck="false" enterkeyhint="search">
+      <button class="btn yellow" type="submit">Sök</button>
+    </form>
+    <div id="liftResults" class="results"></div>
+  </div>
+</section>
+
+<!-- ============ LYFT: RESULT ============ -->
+<section id="result" class="screen" hidden>
+  <header class="head tall">
+    <div class="head-row">
+      <button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div id="resPlate"></div>
+    </div>
+    <p class="place-label" id="resPlaceLabel">Plats</p>
+    <p class="place" id="resPlace"></p>
+  </header>
+  <div class="body" id="resBody"></div>
+  <div class="foot"><button class="btn yellow" id="newOrderBtn">Skapa order</button></div>
+</section>
+
+<!-- ============ CUSTOMER ============ -->
+<section id="customer" class="screen" hidden>
+  <header class="head"><button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h1>KUND</h1></header>
+  <div class="body" id="custBody"></div>
+</section>
+
+<!-- ============ ORDER ============ -->
+<section id="order" class="screen" hidden>
+  <header class="head"><button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="head-col"><span class="kicker" id="ordPlate"></span><h1>NY ORDER</h1></div></header>
+  <div class="body" id="ordBody"></div>
+  <div class="foot"><p class="summary" id="ordSummary"></p><button class="btn yellow" id="saveOrder">Spara order</button></div>
+</section>
+
+<!-- ============ ORDERS ============ -->
+<section id="orders" class="screen" hidden>
+  <header class="head"><button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="head-col"><h1>ORDRAR</h1><span class="sub" id="ordersSub"></span></div></header>
+  <div class="body" id="ordersBody"></div>
+  <div class="foot"><button class="btn yellow" id="exportOrders">Spara Excel-fil</button></div>
+</section>
+
+<!-- ============ QUEUE ============ -->
+<section id="queue" class="screen" hidden>
+  <header class="head"><button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="head-col"><h1>KUNDMOTTAGARE</h1><span class="sub" id="queueSub"></span></div></header>
+  <div class="move-banner" id="moveBanner" hidden><span id="moveText"></span><button class="btn yellow small" id="moveDone">Klar</button></div>
+  <div class="body" id="queueBody"></div>
+  <button class="fab" id="fab" aria-label="Lägg till bil i kön"><svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
+</section>
+
+<!-- ============ RECEPTION: SCAN ============ -->
+<section id="rscan" class="screen dark" hidden>
+  <header class="head flat"><button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h1>NY BIL I KÖN</h1></header>
+  <div class="cam" id="recCam">
+    <video playsinline muted autoplay></video>
+    <div class="frame"></div>
+    <div class="cam-msg">Rikta kameran mot skylten</div>
+    <div class="live" hidden></div>
+    <button class="cam-start" hidden>Starta kameran</button>
+  </div>
+  <form class="sheet" id="manualForm" autocomplete="off">
+    <p class="label">Eller skriv regnumret</p>
+    <div class="toggle" role="radiogroup">
+      <button type="button" class="seg on" data-cc="se" role="radio" aria-checked="true">Svensk</button>
+      <button type="button" class="seg" data-cc="foreign" role="radio" aria-checked="false">Utländsk</button>
+    </div>
+    <div class="row" id="ccRow" hidden>
+      <label for="ccInput" class="strong">Land:</label>
+      <input id="ccInput" class="input cc" maxlength="3" placeholder="D" autocapitalize="characters">
+      <span class="hint">t.ex. D, N, DK, FIN, PL</span>
+    </div>
+    <input id="manualPlate" class="input plate-input big" placeholder="ABC 123" maxlength="14" autocapitalize="characters" spellcheck="false" aria-label="Regnummer">
+    <button class="btn yellow" type="submit">Fortsätt</button>
+  </form>
+</section>
+
+<!-- ============ RECEPTION: JOB ============ -->
+<section id="job" class="screen" hidden>
+  <header class="head tall">
+    <div class="head-row"><button class="round" data-back aria-label="Tillbaka"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h1>VAD SKA GÖRAS?</h1></div>
+    <div class="head-row" style="margin-top:14px"><div id="jobPlate"></div><span class="sub" id="jobInfo"></span></div>
+  </header>
+  <div class="body" id="jobBody"></div>
+  <div class="foot"><p class="summary" id="jobSummary"></p><button class="btn yellow" id="addQueue">Lägg till i kön</button></div>
+</section>
+
+<div class="sheet-modal" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle"></h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

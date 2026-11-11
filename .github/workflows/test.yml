@@ -1,0 +1,20 @@
+name: Test
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm i --no-save playwright@1.47.2 && npx playwright install --with-deps chromium
+      - run: (python3 -m http.server 8000 >/dev/null 2>&1 &) && sleep 1 && node tests/e2e.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shots
+          path: shots
