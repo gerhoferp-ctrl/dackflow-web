@@ -1,5 +1,5 @@
 // Offline cache: app files first from network (so updates arrive), everything else cache-first.
-const CACHE = 'dackflow-v1';
+const CACHE = 'dackflow-v2';
 const APP = ['./', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-180.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(APP)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => {

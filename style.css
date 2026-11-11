@@ -359,3 +359,4 @@ input { font: inherit; }
 @media (min-width: 640px) {
   .screen { max-width: 520px; margin: 0 auto; }
 }
+.card.cust-row { flex-direction: row; }
