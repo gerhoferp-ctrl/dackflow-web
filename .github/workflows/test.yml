@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -13,8 +15,10 @@ jobs:
           node-version: 20
       - run: npm i --no-save playwright@1.47.2 && npx playwright install --with-deps chromium
       - run: (python3 -m http.server 8000 >/dev/null 2>&1 &) && sleep 1 && node tests/e2e.js
-      - uses: actions/upload-artifact@v4
+      - name: Push screenshots to branch "shots"
         if: always()
-        with:
-          name: shots
-          path: shots
+        run: |
+          cd shots
+          git init -q -b shots && git add -A
+          git -c user.name=ci -c user.email=ci@example.com commit -qm "shots ${{ github.run_number }}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" shots

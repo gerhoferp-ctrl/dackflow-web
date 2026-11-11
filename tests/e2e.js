@@ -32,8 +32,22 @@ const log = [];
     await page.waitForTimeout(1500);
     await shot('04-lift');
   });
+  await step('ocr-debug', async () => {
+    await page.waitForTimeout(12000);
+    const r = await page.evaluate(async () => {
+      const c = liftScanner.crop();
+      const v = liftScanner.video;
+      const res = { vw: v.videoWidth, vh: v.videoHeight, worker: !!ocrWorker, running: liftScanner.running, msg: document.querySelector('#liftCam .cam-msg').textContent };
+      if (c) { res.crop = c.toDataURL('image/png'); if (ocrWorker) res.text = (await ocrWorker.recognize(c)).data.text; }
+      return res;
+    });
+    if (r.crop) fs.writeFileSync(path.join(out, 'crop.png'), Buffer.from(r.crop.split(',')[1], 'base64'));
+    delete r.crop;
+    log.push('OCR ' + JSON.stringify(r));
+    await shot('04b-lift-camera');
+  });
   await step('lift-ocr', async () => {
-    await page.waitForSelector('#result:not([hidden])', { timeout: 90000 });
+    await page.waitForSelector('#result:not([hidden])', { timeout: 40000 });
     await page.waitForTimeout(600);
     await shot('05-result');
     await page.evaluate(() => document.querySelector('#resBody').scrollTo(0, 2000));
@@ -68,7 +82,8 @@ const log = [];
     await page.click('.home-btn.reception'); await page.waitForSelector('#queue:not([hidden])'); await shot('10-queue-empty');
     // first car by camera
     await page.click('#fab');
-    await page.waitForSelector('#job:not([hidden])', { timeout: 90000 });
+    try { await page.waitForSelector('#job:not([hidden])', { timeout: 40000 }); }
+    catch { log.push('FAIL queue-camera'); await page.fill('#manualPlate', 'ABC123'); await page.click('#manualForm button[type=submit]'); await page.waitForSelector('#job:not([hidden])'); }
     await page.click('#jobBody .jobcard:nth-child(3) .jobrow');
     await page.click('#jobBody .jobcard:nth-child(4) .jobrow');
     await page.click('.punct button:last-of-type');
@@ -105,6 +120,6 @@ const log = [];
     await shot('16-menu');
   });
   fs.writeFileSync(path.join(out, 'log.txt'), log.join('\n'));
-  console.log(log.join('\n'));
+  console.log(log.map((l) => 'LOG ' + l).join('\n'));
   await browser.close();
 })();

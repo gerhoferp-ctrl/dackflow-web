@@ -733,6 +733,7 @@ function draftOrder() {
     repairs: draft.repairs, balancing: draft.balancing, newTyres: draft.newTyres, by: Settings.name,
   };
 }
+$('#newOrderBtn').addEventListener('click', () => go('order'));
 $('#saveOrder').addEventListener('click', () => {
   const o = draftOrder();
   if (!o.km) { draft.err.hidden = false; $('#kmInput').focus(); return; }
