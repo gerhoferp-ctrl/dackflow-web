@@ -1,0 +1,12 @@
+OK home
+OK settings
+OK lift-file
+OCR {"vw":0,"vh":0,"worker":true,"running":false,"msg":"Rikta kameran mot skylten"}
+OK ocr-debug
+OK lift-ocr
+OK lift-search
+OK customer
+OK order
+OK orders
+OK queue
+OK hold-move
