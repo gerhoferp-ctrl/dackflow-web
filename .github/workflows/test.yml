@@ -14,6 +14,7 @@ jobs:
         with:
           node-version: 20
       - run: npm i --no-save playwright@1.47.2 && npx playwright install --with-deps chromium
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
       - run: ffmpeg -loglevel error -y -loop 1 -i tests/plate.png -t 1 -r 5 -pix_fmt yuv420p tests/plate.y4m
       - run: (python3 -m http.server 8000 >/dev/null 2>&1 &) && sleep 1 && node tests/e2e.js
       - name: Push screenshots to branch "shots"
